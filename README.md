@@ -22,3 +22,8 @@ The repository contains
 5. Try to build up the same circuit as in the sketch and afterwords, press the upload button with the ESP32 connected to the system via MicroUSB cable (remember to select the correct COM port on which the ESP32 is communicating).
 6. When the code is uploaded, open serial monitor by navigating towards the top right icon or by pressing CTRL+SHIFT+M keys.
 7. Observe the response and debugging information on the Serial Monitor.
+
+## LuxVan Components List
+The following link contains the currently shortlisted parts to be used inside the Van. We will add more parts as the project commences.
+
+https://docs.google.com/spreadsheets/d/1jJy_U2NoEfE6qIPrXMqqqc--L85cTw6fI8Ediz0iSCw/edit#gid=0
