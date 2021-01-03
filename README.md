@@ -8,7 +8,7 @@ The repository contains
 - The block diagram for circuit connections.
 
 
-#Instructions
+## Instructions
 
 - These instructions assume you already have ESP32 BSP (Board Support installed on your Arduino IDE). If the ESP32 BSP is not installed, please refer to the following link for instructions on how to install the BSP.
 
