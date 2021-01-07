@@ -23,6 +23,7 @@ https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-window
 7. Observe the response and debugging information on the Serial Monitor.
 
 ### Library Installation
+#### DHT11
 1. Open your Arduino IDE and go to Sketch > Include Library > Manage Libraries. The Library Manager should open.
 2. Search for “DHT” on the Search box and install the DHT library from Adafruit. Make sure that "Type" and "Topic" fields are set to "All".
 3. After installing the DHT library from Adafruit, type “Adafruit Unified Sensor” in the search box. Scroll all the way down to find the library and install it.
@@ -31,6 +32,14 @@ https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-window
     VCC  -> 3.3V
     GND  -> GND (Common)
     Data -> Pin D15 of ESP32
+    
+#### ESP32 Board Support
+1. In your Arduino IDE, go to File> Preferences
+2. Type https://dl.espressif.com/dl/package_esp32_index.json into the “Additional Board Manager URLs” field. Then, click the “OK” button.
+3. Open the Boards Manager. Go to Tools > Board > Boards Manager.
+4. Search for ESP32 in search bar and press install button for the “ESP32 by Espressif Systems“
+5. That’s it. It should be installed after a few seconds.
+
 
 
 ## LuxVan Components List
