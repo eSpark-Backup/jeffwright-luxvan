@@ -32,7 +32,7 @@ void sens_data()
   test4++;
   
   //mydata = "$"+String(h_dht)+","+String(t_dht)+"!"+String(t_bmp)+","+String(a_bmp);
-  mydata = "$"+String(t_dht)+","+String(distance);
+  mydata = "$"+String(t_dht)+","+String(distance)+"!";
 
   
   mydata.toCharArray(payload, 80);
