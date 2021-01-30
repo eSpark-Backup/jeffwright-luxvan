@@ -13,7 +13,7 @@ void notFound(AsyncWebServerRequest *request)
 void setup()
 {
   Serial.begin(115200);
-  WiFi.mode(WIFI_AP);
+  WiFi.mode(WIFI_AP); //WiFi in AP Mode for Server Creation
   WiFi.softAP(ssid, password);
   
   IPAddress IP = WiFi.softAPIP();

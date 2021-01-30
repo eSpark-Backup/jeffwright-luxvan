@@ -39,7 +39,7 @@ static void notifyCallback(
       //Serial.println((char*)pData);
       mydata = pData;
       //ref_time = current_time;
-    //}
+    //}//
 }
 
 class MyClientCallback : public BLEClientCallbacks {
