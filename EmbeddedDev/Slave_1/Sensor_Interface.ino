@@ -2,7 +2,7 @@ void sens_data()
 {
 
 /***** Ultrasonic-CurrentLogic *****/
-  ping();
+//  ping();
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -13,7 +13,7 @@ void sens_data()
   duration = pulseIn(echoPin, HIGH);
   distance= duration*0.034/2; */
 
-/***** BMP/DHT Sensor Logic *****/
+/***** BMP/DHT Sensor Logic *****
   h_dht = dht.readHumidity();
   t_dht = dht.readTemperature();
   
@@ -25,13 +25,13 @@ void sens_data()
   //a_bmp = bmp.readAltitude();
   a_bmp = -1;
   
-  //t_bmp = bmp.readTemperature();
+  //t_bmp = bmp.readTemperature();/
 
 
 /***** Weight Sensor Logic *****/
-  weight = get_weight();
+//  weight = get_weight();
 
-  
+   
 /***** Test Variables *****/
   test1++;
   test2++;
