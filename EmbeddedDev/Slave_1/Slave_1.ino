@@ -80,7 +80,7 @@ void setup() {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
 
 
-/***** Wieght Sensor Initialization *****/
+/***** Wieght Sensor Initialization *****
   Serial.println("Before setting up the scale:");
   Serial.print("read: \t\t");
   Serial.println(scale.read());      // print a raw reading from the ADC
