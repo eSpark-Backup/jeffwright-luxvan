@@ -1,12 +1,13 @@
-#include <Wire.h>
-#include <Adafruit_BMP085.h>
-#include <BLEDevice.h>
-#include <BLEServer.h>
-#include <BLEUtils.h>
-#include <BLE2902.h>
 #include "DHT.h"
 #include "HX711.h"
-
+#include <Wire.h>
+#include <BLE2902.h>
+#include <BLEUtils.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <Adafruit_BMP085.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_MPU6050.h>
 
 
 
@@ -20,6 +21,10 @@ bool oldDeviceConnected = false;
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8" // Random 128-bit UniqueID for BLE Characteristic
 
 
+/***** Inclinometer Definition *****/
+#define SDA 21
+#define SCL 22
+Adafruit_MPU6050 mpu;
 
 /***** DHT11 Sensor Definition *****/
 #define DHTPIN 15
@@ -48,6 +53,7 @@ float t_dht = 0;
 float t_bmp = 0;
 float a_bmp = 0;
 float weight = 0;
+float aX=0, aY=0, aZ=0, gX=0, gY=0, gZ=0;
 long duration;
 int distance;
 String mydata = "";
@@ -80,7 +86,17 @@ void setup() {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
 
 
-/***** Wieght Sensor Initialization *****/
+/***** Inclinometer Sensor Initialization *****/
+  if (!mpu.begin()) { 
+    Serial.println("Failed to find MPU6050 chip");
+  }
+
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
+
+
+/***** Wieght Sensor Initialization *****
   Serial.println("Before setting up the scale:");
   Serial.print("read: \t\t");
   Serial.println(scale.read());      // print a raw reading from the ADC

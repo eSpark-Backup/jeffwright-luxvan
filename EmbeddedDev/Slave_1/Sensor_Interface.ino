@@ -1,8 +1,12 @@
 void sens_data()
 {
 
-/***** Ultrasonic-CurrentLogic *****/
-//  ping();
+/***** Inclinometer Logic *****
+  inclino_data();/
+
+  
+/***** Ultrasonic-NewLogic *****
+  ping();/
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -28,8 +32,8 @@ void sens_data()
   //t_bmp = bmp.readTemperature();/
 
 
-/***** Weight Sensor Logic *****/
-//  weight = get_weight();
+/***** Weight Sensor Logic *****
+  weight = get_weight();/
 
    
 /***** Test Variables *****/
@@ -89,4 +93,18 @@ float get_weight() {
   scale.power_up();
 
   return scale.get_units(10);
+}
+
+void inclino_data() {
+  
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+
+  aX = a.acceleration.x;
+  aY = a.acceleration.y;
+  aZ = a.acceleration.z
+
+  gX = g.gyro.x;
+  gY = g.gyro.y;
+  gZ = g.gyro.z;
 }
