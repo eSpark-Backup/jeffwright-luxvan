@@ -5,8 +5,8 @@ void sens_data()
   inclino_data();/
 
   
-/***** Ultrasonic-NewLogic *****
-  ping();/
+/***** Ultrasonic-NewLogic *****/
+  ping();
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -36,20 +36,21 @@ void sens_data()
   weight = get_weight();/
 
    
-/***** Test Variables *****/
+/***** Test Variables ****
   test1++;
   test2++;
   test3++;
-  test4++;
+  test4++;*/
+  
   
   //mydata = "$"+String(h_dht)+","+String(t_dht)+"!"+String(t_bmp)+","+String(a_bmp);
   mydata = "$"+String(test1)+","+String(test2)+"!"+String(test3)+"@,"+String(test4);
 
   
   mydata.toCharArray(payload, 80);
-  Serial.println(payload);
+  //Serial.println(payload);
 
-  delay(2000);
+  delay(10);
 }
 
 void ping() {
@@ -70,13 +71,17 @@ int readSerial() {
   
   while (Serial2.available()) {
     byte b = Serial2.read();
+    Serial.print("Byte b: ");
+    Serial.println(b);
   }
   
   Serial2.setTimeout(95);
   
-  if( Serial2.readBytes(serialData,4) > 0) {
+  if(Serial2.readBytes(serialData,4) > 0) {
     discalc = ((serialData[1] * 256) + serialData[2]);
     discalc = (discalc * (1/25.4)); //distance is returned from sensor in mm - this will convert to inches.
+    Serial.print("Discalc: ");
+    Serial.println(discalc);
   }
   return discalc;
 }
@@ -102,7 +107,7 @@ void inclino_data() {
 
   aX = a.acceleration.x;
   aY = a.acceleration.y;
-  aZ = a.acceleration.z
+  aZ = a.acceleration.z;
 
   gX = g.gyro.x;
   gY = g.gyro.y;

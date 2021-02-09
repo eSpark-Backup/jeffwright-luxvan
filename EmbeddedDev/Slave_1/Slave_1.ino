@@ -78,7 +78,7 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Pin Initializ
   pinMode(echoPin, INPUT); 
   Serial.begin(115200);
-  Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
+  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
   
   dht.begin();    // Validate and Initialize the DHT11 Sensor
   
@@ -91,9 +91,9 @@ void setup() {
     Serial.println("Failed to find MPU6050 chip");
   }
 
-  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
+  //mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  //mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  //mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
 
 
 /***** Wieght Sensor Initialization *****
@@ -151,7 +151,7 @@ void setup() {
 
   // Start advertising
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->addServiceUUID(SERVICE_UUID); 
   pAdvertising->setScanResponse(false);
   pAdvertising->setMinPreferred(0x0);
   BLEDevice::startAdvertising();
@@ -160,7 +160,7 @@ void setup() {
 }
 
 void loop() {
-
+        sens_data();
     if (deviceConnected) {    //Variable automatically true when a device connects via the Callback function
         sens_data();
         pCharacteristic->setValue(payload);
