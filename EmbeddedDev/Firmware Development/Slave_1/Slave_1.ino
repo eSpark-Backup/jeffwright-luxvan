@@ -75,7 +75,7 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 void setup() {
 
-  pinMode(trigPin, OUTPUT); // Pin Initializ
+  pinMode(trigPin, OUTPUT); // Pin Initialize
   pinMode(echoPin, INPUT); 
   Serial.begin(115200);
   Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
