@@ -1,6 +1,7 @@
 #include "DHT.h"
 #include "HX711.h"
 #include <Wire.h>
+#include <NewPing.h>
 #include <BLE2902.h>
 #include <BLEUtils.h>
 #include <BLEDevice.h>
@@ -24,28 +25,37 @@ bool oldDeviceConnected = false;
 /***** Inclinometer Definition *****/
 #define SDA 21
 #define SCL 22
-Adafruit_MPU6050 mpu;
 
-/***** DHT11 Sensor Definition *****/
+TwoWire I2Cone = TwoWire(0);
+
+Adafruit_MPU6050 mpu;
+Adafruit_Sensor *mpu_accel, *mpu_gyro;
+
+/***** DHT11 Sensor Definition *****
 #define DHTPIN 15
-#define DHTTYPE DHT11
+#define DHTTYPE DHT11*/
 
 /***** Ultrasonic Sensor Definition *****/
-const int trigPin = 5;
-const int echoPin = 2;
-#define RXD2 16
-#define TXD2 17
+#define trigPin 25
+#define echoPin 26
+#define MAX_DISTANCE 400
 
-/***** HX711 Sensor Definition *****/
+NewPing sonar = NewPing(trigPin, echoPin, MAX_DISTANCE);
+
+/***** HX711 Sensor Definition *****
 const int LOADCELL_DOUT_PIN = 25;
 const int LOADCELL_SCK_PIN = 26;
-HX711 scale;
+HX711 scale;*/
 
 
-/***** Constructor for Sensors *****/
-DHT dht(DHTPIN, DHTTYPE);
+/***** Constructor for Temp-Hum Sensors *****
+DHT dht(DHTPIN, DHTTYPE);*/
+#define SDA_1 33
+#define SCL_1 32
+
+TwoWire I2Ctwo = TwoWire(1);
+
 Adafruit_BMP085 bmp;
-
 
 /***** Custom User Variables *****/
 float h_dht = 0;
@@ -75,25 +85,48 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 void setup() {
 
-  pinMode(trigPin, OUTPUT); // Pin Initialize
+  pinMode(trigPin, OUTPUT); // Pin Initialize for Ultrasonic-Sensor
   pinMode(echoPin, INPUT); 
   Serial.begin(115200);
-  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
   
-  dht.begin();    // Validate and Initialize the DHT11 Sensor
+  //dht.begin();    // Validate and Initialize the DHT11 Sensor
   
-  if (!bmp.begin())   // Validate and Initialize the BMP180 Sensor
-    Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
+//  if (!bmp.begin())   // Validate and Initialize the BMP180 Sensor
+//    Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
+//
+//
+///***** Inclinometer Sensor Initialization *****/
+//  if (!mpu.begin()) { 
+//    Serial.println("Failed to find MPU6050 chip");
+//  }
 
+/***** I2C Sensor Initialization *****/
+  Wire.begin(SDA, SCL);
+  Wire1.begin(SDA_1, SCL_1);
 
-/***** Inclinometer Sensor Initialization *****/
-  if (!mpu.begin()) { 
-    Serial.println("Failed to find MPU6050 chip");
+  bool stat = mpu.begin(0x68, &I2Cone);
+  if (!stat) {
+    Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
   }
 
-  //mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
-  //mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  //mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
+  bool stat1 = bmp.begin(0x77, &I2Ctwo)
+  if (!stat1) {
+    Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
+  }
+
+
+
+/***** Get Module Detail from Sensors *****/
+  if (stat) {
+    mpu_accel = mpu.getAccelerometerSensor();
+    mpu_accel->printSensorDetails();
+    mpu_gyro = mpu.getGyroSensor();
+    mpu_gyro->printSensorDetails();
+  }
+
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
 
 
 /***** Wieght Sensor Initialization *****

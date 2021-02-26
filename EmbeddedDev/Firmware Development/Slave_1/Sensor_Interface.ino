@@ -6,7 +6,7 @@ void sens_data()
 
   
 /***** Ultrasonic-NewLogic *****/
-  ping();
+//  ping();
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -26,14 +26,14 @@ void sens_data()
     t_dht = -1;
   }
 
-  //a_bmp = bmp.readAltitude();
+  a_bmp = bmp.readAltitude();
   a_bmp = -1;
   
-  //t_bmp = bmp.readTemperature();/
+  t_bmp = bmp.readTemperature();/
 
 
 /***** Weight Sensor Logic *****
-  weight = get_weight();/
+  weight = get_weight();*/
 
    
 /***** Test Variables ****
@@ -54,15 +54,13 @@ void sens_data()
 }
 
 void ping() {
-  int avg = 0;
-  for (int i=0;i<10;i++) {
-    int temp = readSerial();
-    
-    if (temp >= 220 || temp <= 0) { i = i -1;}
-    else { avg = avg + temp; }
-}
-  distance = avg/10;
-  Serial.print(distance);Serial.println(" in. ");
+  
+  delay(50); 
+  Serial.print("Distance = "); // Measure distance and print to the Serial Monitor:
+  float distance = sonar.ping_cm(); // Send ping, get distance in cm and print result (0 = outside set distance range):
+  distance = distance / 2.54; // Convert distance from cm to inches
+  Serial.print(distance); 
+  Serial.println(" inch");
 }
 
 int readSerial() {
