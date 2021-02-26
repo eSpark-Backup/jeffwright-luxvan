@@ -20,6 +20,9 @@ bool oldDeviceConnected = false;
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b" // Random 128-bit UniqueID for BLE Service
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8" // Random 128-bit UniqueID for BLE Characteristic
+#define LED_CHARACTERISTIC_UUID       BLEUUID((uint16_t)0xA0A1)
+
+BLECharacteristic *pcharacteristic_led  = NULL;
 
 
 /***** Inclinometer Definition *****/
@@ -31,9 +34,11 @@ TwoWire I2Cone = TwoWire(0);
 Adafruit_MPU6050 mpu;
 Adafruit_Sensor *mpu_accel, *mpu_gyro;
 
-/***** DHT11 Sensor Definition *****
+/***** DHT11 Sensor Definition *****/
 #define DHTPIN 15
-#define DHTTYPE DHT11*/
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
 
 /***** Ultrasonic Sensor Definition *****/
 #define trigPin 25
@@ -69,6 +74,7 @@ int distance;
 String mydata = "";
 char payload[80];
 int test1 = 0, test2 = 1, test3 = 2, test4 = 3;   // Variables to test logic without Sensors
+String val_1;
 
 
 /***** BLE-Callback Function for BLE-Stack *****/
@@ -82,6 +88,19 @@ class MyServerCallbacks: public BLEServerCallbacks {
     }
 };
 
+class LedCharacteristicCallback: public BLECharacteristicCallbacks {
+    void onWrite (BLECharacteristic *pcharacteristic_led) {
+      std::string value = pcharacteristic_led->getValue();
+      if (value.length()>0) {
+        for (int j = 0; j < value.length(); j++) 
+        {val_1 += value[j]; Serial.print(value[j]);}
+      }
+
+        //if (val_1 == "Stop") { }
+    
+}
+};
+
 
 void setup() {
 
@@ -89,17 +108,8 @@ void setup() {
   pinMode(echoPin, INPUT); 
   Serial.begin(115200);
   
-  //dht.begin();    // Validate and Initialize the DHT11 Sensor
+  dht.begin();    // Validate and Initialize the DHT11 Sensor
   
-//  if (!bmp.begin())   // Validate and Initialize the BMP180 Sensor
-//    Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
-//
-//
-///***** Inclinometer Sensor Initialization *****/
-//  if (!mpu.begin()) { 
-//    Serial.println("Failed to find MPU6050 chip");
-//  }
-
 /***** I2C Sensor Initialization *****/
   Wire.begin(SDA, SCL);
   Wire1.begin(SDA_1, SCL_1);
@@ -109,7 +119,7 @@ void setup() {
     Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
   }
 
-  bool stat1 = bmp.begin(0x77, &I2Ctwo)
+  bool stat1 = bmp.begin();
   if (!stat1) {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
   }
@@ -163,7 +173,7 @@ void setup() {
 
   
 /***** BLE-Stack Definitions *****/
-  BLEDevice::init("Slave_1");   // Give a custom name to the device
+  BLEDevice::init("ESP32_Jeff");   // Give a custom name to the device
   
   pServer = BLEDevice::createServer();    // Create a BLE-Server Application for Slave Functionality
   pServer->setCallbacks(new MyServerCallbacks());   // Attach callback function declared above to BLE-Stack
@@ -179,6 +189,11 @@ void setup() {
                     );                                        // Create and define the properties of the BLE Characteristic
                     
   pCharacteristic->addDescriptor(new BLE2902());
+
+  pcharacteristic_led = new BLECharacteristic(LED_CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_WRITE);
+  pcharacteristic_led->setCallbacks(new LedCharacteristicCallback());
+  pService->addCharacteristic(pcharacteristic_led);
+  pcharacteristic_led->addDescriptor(new BLE2902());
   
   pService->start();    // Start the BLE-Server
 

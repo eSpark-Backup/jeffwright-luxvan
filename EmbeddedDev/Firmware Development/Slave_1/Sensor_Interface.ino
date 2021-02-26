@@ -6,7 +6,7 @@ void sens_data()
 
   
 /***** Ultrasonic-NewLogic *****/
-//  ping();
+//  son_ping();
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -17,19 +17,16 @@ void sens_data()
   duration = pulseIn(echoPin, HIGH);
   distance= duration*0.034/2; */
 
-/***** BMP/DHT Sensor Logic *****
+/***** BMP/DHT Sensor Logic *****/
   h_dht = dht.readHumidity();
-  t_dht = dht.readTemperature();
+  //t_dht = dht.readTemperature();
   
-  if (isnan(h_dht) || isnan(t_dht)) {
+  if (isnan(h_dht)) {
     h_dht = -1;
-    t_dht = -1;
   }
 
   a_bmp = bmp.readAltitude();
-  a_bmp = -1;
-  
-  t_bmp = bmp.readTemperature();/
+  t_bmp = bmp.readTemperature();
 
 
 /***** Weight Sensor Logic *****
@@ -53,7 +50,7 @@ void sens_data()
   delay(10);
 }
 
-void ping() {
+void son_ping() {
   
   delay(50); 
   Serial.print("Distance = "); // Measure distance and print to the Serial Monitor:
@@ -63,40 +60,19 @@ void ping() {
   Serial.println(" inch");
 }
 
-int readSerial() {
-  byte serialData[5];
-  int discalc;
-  
-  while (Serial2.available()) {
-    byte b = Serial2.read();
-    Serial.print("Byte b: ");
-    Serial.println(b);
-  }
-  
-  Serial2.setTimeout(95);
-  
-  if(Serial2.readBytes(serialData,4) > 0) {
-    discalc = ((serialData[1] * 256) + serialData[2]);
-    discalc = (discalc * (1/25.4)); //distance is returned from sensor in mm - this will convert to inches.
-    Serial.print("Discalc: ");
-    Serial.println(discalc);
-  }
-  return discalc;
-}
-
-float get_weight() {
-  
-  Serial.print("one reading:\t");
-  Serial.print(scale.get_units(), 1);
-  Serial.print("\t| average:\t");
-  Serial.println(scale.get_units(10), 1);
-
-  scale.power_down();              // put the ADC in sleep mode
-  delay(5000);
-  scale.power_up();
-
-  return scale.get_units(10);
-}
+//float get_weight() {
+//  
+//  Serial.print("one reading:\t");
+//  Serial.print(scale.get_units(), 1);
+//  Serial.print("\t| average:\t");
+//  Serial.println(scale.get_units(10), 1);
+//
+//  scale.power_down();              // put the ADC in sleep mode
+//  delay(5000);
+//  scale.power_up();
+//
+//  return scale.get_units(10);
+//}
 
 void inclino_data() {
   
