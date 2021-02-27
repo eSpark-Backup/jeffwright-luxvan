@@ -68,13 +68,13 @@ float t_bmp = 0;
 float a_bmp = 0;
 float weight = 0;
 float aX=0, aY=0, aZ=0, gX=0, gY=0, gZ=0;
-long duration;
 float distance, dist;
 String mydata = "";
 char payload[80];
 int test1 = 0, test2 = 1, test3 = 2, test4 = 3;   // Variables to test logic without Sensors
 String val_1;
 bool stat=false, stat1=false;
+const int led_pin = 27;
 
 
 /***** BLE-Callback Function for BLE-Stack *****/
@@ -93,9 +93,21 @@ class LedCharacteristicCallback: public BLECharacteristicCallbacks {
       std::string value = pcharacteristic_led->getValue();
       if (value.length()>0) {
         for (int j = 0; j < value.length(); j++) { 
-          val_1 += value[j]; Serial.print(value[j]);}
+          val_1 += value[j]; 
+          Serial.print(value[j]);
+        }
+        Serial.println("");
+        if (val_1 == "0") {
+          digitalWrite(led_pin, LOW);
+          Serial.println("LED OFF");
+        }
+
+        else {
+          digitalWrite(led_pin, HIGH);
+          Serial.println("LED ON");
         }
       }
+    }
 };
 
 
@@ -103,6 +115,7 @@ void setup() {
 
   pinMode(trigPin, OUTPUT); // Trig Pin Initialize for Ultrasonic-Sensor
   pinMode(echoPin, INPUT);  // Echo Pin Initialize for Ultrasonic-Sensor
+  pinMode(led_pin, OUTPUT);
   Serial.begin(115200);
 //  
   dht.begin();    // Validate and Initialize the DHT11 Sensor
