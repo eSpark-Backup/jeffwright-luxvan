@@ -20,19 +20,17 @@ bool oldDeviceConnected = false;
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b" // Random 128-bit UniqueID for BLE Service
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8" // Random 128-bit UniqueID for BLE Characteristic
-#define LED_CHARACTERISTIC_UUID       BLEUUID((uint16_t)0xA0A1)
+#define LED_CHARACTERISTIC_UUID       BLEUUID((uint16_t)0xA0A1)    // Random 128-bit UniqueID for LED Control Characteristic
 
 BLECharacteristic *pcharacteristic_led  = NULL;
 
 
 /***** Inclinometer Definition *****/
-#define SDA 21
-#define SCL 22
+#define SDA_MPU 21
+#define SCL_MPU 22
 
-TwoWire I2Cone = TwoWire(0);
-
-Adafruit_MPU6050 mpu;
-Adafruit_Sensor *mpu_accel, *mpu_gyro;
+//Adafruit_MPU6050 mpu;
+//Adafruit_Sensor *mpu_accel, *mpu_gyro;
 
 /***** DHT11 Sensor Definition *****/
 #define DHTPIN 15
@@ -53,14 +51,15 @@ const int LOADCELL_SCK_PIN = 26;
 HX711 scale;*/
 
 
-/***** Constructor for Temp-Hum Sensors *****
-DHT dht(DHTPIN, DHTTYPE);*/
-#define SDA_1 33
-#define SCL_1 32
-
-TwoWire I2Ctwo = TwoWire(1);
+/***** Constructor for Temp-Hum Sensors *****/
+#define SDA_BMP 33
+#define SCL_BMP 32
 
 Adafruit_BMP085 bmp;
+
+/***** Constructor for Multiple I2C Bus *****/
+TwoWire I2Cone = TwoWire(0);
+TwoWire I2Ctwo = TwoWire(1);
 
 /***** Custom User Variables *****/
 float h_dht = 0;
@@ -70,11 +69,12 @@ float a_bmp = 0;
 float weight = 0;
 float aX=0, aY=0, aZ=0, gX=0, gY=0, gZ=0;
 long duration;
-float distance;
+float distance, dist;
 String mydata = "";
 char payload[80];
 int test1 = 0, test2 = 1, test3 = 2, test4 = 3;   // Variables to test logic without Sensors
 String val_1;
+bool stat=false, stat1=false;
 
 
 /***** BLE-Callback Function for BLE-Stack *****/
@@ -92,41 +92,39 @@ class LedCharacteristicCallback: public BLECharacteristicCallbacks {
     void onWrite (BLECharacteristic *pcharacteristic_led) {
       std::string value = pcharacteristic_led->getValue();
       if (value.length()>0) {
-        for (int j = 0; j < value.length(); j++) 
-        {val_1 += value[j]; Serial.print(value[j]);}
+        for (int j = 0; j < value.length(); j++) { 
+          val_1 += value[j]; Serial.print(value[j]);}
+        }
       }
-
-        //if (val_1 == "Stop") { }
-    
-}
 };
 
 
 void setup() {
 
-  pinMode(trigPin, OUTPUT); // Pin Initialize for Ultrasonic-Sensor
-  pinMode(echoPin, INPUT); 
+  pinMode(trigPin, OUTPUT); // Trig Pin Initialize for Ultrasonic-Sensor
+  pinMode(echoPin, INPUT);  // Echo Pin Initialize for Ultrasonic-Sensor
   Serial.begin(115200);
-  
+//  
   dht.begin();    // Validate and Initialize the DHT11 Sensor
   
 /***** I2C Sensor Initialization *****/
-  Wire.begin(SDA, SCL);
-  Wire1.begin(SDA_1, SCL_1);
+  //Wire.begin(SDA, SCL);
+  //Wire1.begin(SDA_1, SCL_1);
+  I2Cone.begin(SDA_BMP, SCL_BMP, 100000); 
+  I2Ctwo.begin(SDA_MPU, SCL_MPU, 100000);
 
-  bool stat = mpu.begin(0x68, &I2Cone);
-  if (!stat) {
-    Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
-  }
-
-  bool stat1 = bmp.begin();
+  stat1 = bmp.begin(BMP085_STANDARD, &I2Cone);
   if (!stat1) {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
   }
 
+//  stat = mpu.begin(0x68, &I2Ctwo);
+//  if (!stat) {
+//    Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
+//  }
 
 
-/***** Get Module Detail from Sensors *****/
+/***** Get Module Detail from Sensors *****
   if (stat) {
     mpu_accel = mpu.getAccelerometerSensor();
     mpu_accel->printSensorDetails();
@@ -136,7 +134,7 @@ void setup() {
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
+  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);*/
 
 
 /***** Wieght Sensor Initialization *****

@@ -6,7 +6,7 @@ void sens_data()
 
   
 /***** Ultrasonic-NewLogic *****/
-//  son_ping();
+  son_ping();
   
 /***** Ultrasonic-PreviousLogic *****
   digitalWrite(trigPin, LOW);
@@ -18,15 +18,20 @@ void sens_data()
   distance= duration*0.034/2; */
 
 /***** BMP/DHT Sensor Logic *****/
-  h_dht = dht.readHumidity();
+  //h_dht = dht.readHumidity();
   //t_dht = dht.readTemperature();
   
-  if (isnan(h_dht)) {
+  if (!(isnan(h_dht))) {
+    h_dht = dht.readHumidity();
+  }
+  else {
     h_dht = -1;
   }
 
-  a_bmp = bmp.readAltitude();
-  t_bmp = bmp.readTemperature();
+  if (stat1) {
+    a_bmp = bmp.readAltitude();
+    t_bmp = bmp.readTemperature();
+  }
 
 
 /***** Weight Sensor Logic *****
@@ -41,28 +46,35 @@ void sens_data()
   
   
   //mydata = "$"+String(h_dht)+","+String(t_dht)+"!"+String(t_bmp)+","+String(a_bmp);
-  mydata = "$"+String(test1)+","+String(test2)+"!"+String(test3)+"@,"+String(test4);
+  mydata = String(t_bmp)+"a,"+String(distance)+"b,"+String(h_dht)+"c,"+String(a_bmp)+"d,"+
+           String(aX)+"xe,"+String(aY)+"ye,"+String(aZ)+"ze";
 
   
   mydata.toCharArray(payload, 80);
-  //Serial.println(payload);
+  Serial.println(payload);
 
-  delay(10);
+  delay(300);
 }
 
 void son_ping() {
   
   delay(50); 
-  Serial.print("Distance = "); // Measure distance and print to the Serial Monitor:
-  //float distance = sonar.ping_cm(); // Send ping, get distance in cm and print result (0 = outside set distance range):
-
-  for (int x = 0; x <10; x++) {
-    distance = distance + sonar.ping_in(); // Send ping, get distance in inches and print result (0 = outside set distance range):
+  float value = sonar.ping_in(); // Send ping, get distance in cm and print result (0 = outside set distance range):
+  if (value > 0.00) {
+    dist = value;
   }
-  distance /= 10;
 
-  Serial.print(distance); 
-  Serial.println(" inch");
+  distance = map(dist, 9, 19, 18, 1); 
+  
+
+//  for (int x = 0; x <10; x++) {
+//    float value = sonar.ping_in(); // Send ping, get distance in inches and print result (0 = outside set distance range):
+//    if (value > 0) {
+//      distance += value;
+//    }
+//  }
+//  distance /= 10;
+
 }
 
 //float get_weight() {
@@ -79,16 +91,16 @@ void son_ping() {
 //  return scale.get_units(10);
 //}
 
-void inclino_data() {
-  
-  sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
-
-  aX = a.acceleration.x;
-  aY = a.acceleration.y;
-  aZ = a.acceleration.z;
-
-  gX = g.gyro.x;
-  gY = g.gyro.y;
-  gZ = g.gyro.z;
-}
+//void inclino_data() {
+//  
+//  sensors_event_t a, g, temp;
+//  mpu.getEvent(&a, &g, &temp);
+//
+//  aX = a.acceleration.x;
+//  aY = a.acceleration.y;
+//  aZ = a.acceleration.z;
+//
+//  gX = g.gyro.x;
+//  gY = g.gyro.y;
+//  gZ = g.gyro.z;
+//}
