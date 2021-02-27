@@ -29,8 +29,8 @@ BLECharacteristic *pcharacteristic_led  = NULL;
 #define SDA_MPU 21
 #define SCL_MPU 22
 
-//Adafruit_MPU6050 mpu;
-//Adafruit_Sensor *mpu_accel, *mpu_gyro;
+Adafruit_MPU6050 mpu;
+Adafruit_Sensor *mpu_accel, *mpu_gyro;
 
 /***** DHT11 Sensor Definition *****/
 #define DHTPIN 15
@@ -132,13 +132,13 @@ void setup() {
     Serial.println("Could not find a valid BMP085 sensor, check wiring!"); // Prints the message and continues with the code
   }
 
-//  stat = mpu.begin(0x68, &I2Ctwo);
-//  if (!stat) {
-//    Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
-//  }
+  stat = mpu.begin(0x68, &I2Ctwo);
+  if (!stat) {
+    Serial.println("Could not find a valid MPU_1 sensor, check wiring!"); // Prints the message and continues with the code
+  }
 
 
-/***** Get Module Detail from Sensors *****
+/***** Get Module Detail from Sensors *****/
   if (stat) {
     mpu_accel = mpu.getAccelerometerSensor();
     mpu_accel->printSensorDetails();
@@ -148,7 +148,7 @@ void setup() {
 
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);*/
+  mpu.setFilterBandwidth(MPU6050_BAND_5_HZ);
 
 
 /***** Wieght Sensor Initialization *****

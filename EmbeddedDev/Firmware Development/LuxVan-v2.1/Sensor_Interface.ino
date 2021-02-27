@@ -1,8 +1,8 @@
 void sens_data()
 {
 
-/***** Inclinometer Logic *****
-  inclino_data();/
+/***** Inclinometer Logic *****/
+  inclino_data();
 
   
 /***** Ultrasonic-NewLogic *****/
@@ -91,16 +91,16 @@ void son_ping() {
 //  return scale.get_units(10);
 //}
 
-//void inclino_data() {
-//  
-//  sensors_event_t a, g, temp;
-//  mpu.getEvent(&a, &g, &temp);
-//
-//  aX = a.acceleration.x;
-//  aY = a.acceleration.y;
-//  aZ = a.acceleration.z;
-//
+void inclino_data() {
+  
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+
+  aX = a.acceleration.x;
+  aY = a.acceleration.y;
+  aZ = a.acceleration.z;
+
 //  gX = g.gyro.x;
 //  gY = g.gyro.y;
 //  gZ = g.gyro.z;
-//}
+}
