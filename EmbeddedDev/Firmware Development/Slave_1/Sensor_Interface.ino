@@ -54,8 +54,13 @@ void son_ping() {
   
   delay(50); 
   Serial.print("Distance = "); // Measure distance and print to the Serial Monitor:
-  float distance = sonar.ping_cm(); // Send ping, get distance in cm and print result (0 = outside set distance range):
-  distance = distance / 2.54; // Convert distance from cm to inches
+  //float distance = sonar.ping_cm(); // Send ping, get distance in cm and print result (0 = outside set distance range):
+
+  for (int x = 0; x <10; x++) {
+    distance = distance + sonar.ping_in(); // Send ping, get distance in inches and print result (0 = outside set distance range):
+  }
+  distance /= 10;
+
   Serial.print(distance); 
   Serial.println(" inch");
 }

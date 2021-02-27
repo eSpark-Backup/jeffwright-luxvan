@@ -70,7 +70,7 @@ float a_bmp = 0;
 float weight = 0;
 float aX=0, aY=0, aZ=0, gX=0, gY=0, gZ=0;
 long duration;
-int distance;
+float distance;
 String mydata = "";
 char payload[80];
 int test1 = 0, test2 = 1, test3 = 2, test4 = 3;   // Variables to test logic without Sensors
