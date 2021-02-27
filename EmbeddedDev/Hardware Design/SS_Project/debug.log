@@ -823,3 +823,5 @@
 [0129/002327:WARNING:dns_config_service_win.cc(665)] Failed to read DnsConfig.
 [0129/002332:WARNING:dns_config_service_win.cc(665)] Failed to read DnsConfig.
 [0129/002337:WARNING:dns_config_service_win.cc(665)] Failed to read DnsConfig.
+[0227/114243:WARNING:dns_config_service_win.cc(665)] Failed to read DnsConfig.
+[0227/114247:WARNING:dns_config_service_win.cc(665)] Failed to read DnsConfig.
