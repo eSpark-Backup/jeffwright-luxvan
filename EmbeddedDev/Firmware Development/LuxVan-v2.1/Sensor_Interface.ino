@@ -53,7 +53,7 @@ void sens_data()
   mydata.toCharArray(payload, 80);
   Serial.println(payload);
 
-  delay(300);
+  delay(10);
 }
 
 void son_ping() {

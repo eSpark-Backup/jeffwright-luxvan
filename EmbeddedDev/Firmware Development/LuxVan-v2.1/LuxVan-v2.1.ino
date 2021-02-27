@@ -102,10 +102,11 @@ class LedCharacteristicCallback: public BLECharacteristicCallbacks {
           Serial.println("LED OFF");
         }
 
-        else {
+        else if (val_1 == "1") {
           digitalWrite(led_pin, HIGH);
           Serial.println("LED ON");
         }
+        val_1 = "";
       }
     }
 };
@@ -219,7 +220,7 @@ void setup() {
 }
 
 void loop() {
-        sens_data();
+        //sens_data();
     if (deviceConnected) {    //Variable automatically true when a device connects via the Callback function
         sens_data();
         pCharacteristic->setValue(payload);
